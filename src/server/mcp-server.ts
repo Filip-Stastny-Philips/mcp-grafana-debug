@@ -28,6 +28,19 @@ export interface ToolContext {
   logger: pino.Logger;
 }
 
+function stripNullValues(obj: unknown): unknown {
+  if (obj === null || obj === undefined) return obj;
+  if (Array.isArray(obj)) return obj.map(stripNullValues);
+  if (typeof obj === 'object') {
+    return Object.fromEntries(
+      Object.entries(obj as Record<string, unknown>)
+        .filter(([, v]) => v !== null)
+        .map(([k, v]) => [k, stripNullValues(v)])
+    );
+  }
+  return obj;
+}
+
 export class MCPServer {
   private server: Server;
   private tools: Map<string, ToolDefinition> = new Map();
@@ -160,8 +173,13 @@ export class MCPServer {
         Object.keys(args).filter(k => k !== '_meta').length === 1
       ) ? (args as any).params : args;
 
+      // LLMs sometimes encode "not provided" optional fields as JSON null.
+      // Zod's .optional() rejects null (only undefined passes), so strip
+      // null-valued keys recursively before validation.
+      const strippedArgs = stripNullValues(rawArgs);
+
       try {
-        const validatedArgs = tool.inputSchema.parse(rawArgs);
+        const validatedArgs = tool.inputSchema.parse(strippedArgs);
 
         // --- Dry-run mode ---
         if (isWrite && gov.dryRun) {

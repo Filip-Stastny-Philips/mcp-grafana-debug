@@ -1,7 +1,7 @@
 {
-  "name": "@leval/mcp-grafana",
-  "version": "1.1.7",
-  "description": "Model Context Protocol (MCP) server for Grafana - Complete TypeScript implementation with all tools",
+  "name": "@filip.happy/mcp-grafana",
+  "version": "1.1.8",
+  "description": "Fork of @leval/mcp-grafana — MCP server for Grafana with null-argument stripping fix for LLM compatibility",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -21,12 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/levalhq/mcp-grafana.git"
+    "url": "git+https://github.com/Filip-Stastny-Philips/mcp-grafana-debug.git"
   },
   "bugs": {
-    "url": "https://github.com/levalhq/mcp-grafana/issues"
+    "url": "https://github.com/Filip-Stastny-Philips/mcp-grafana-debug/issues"
   },
-  "homepage": "https://github.com/levalhq/mcp-grafana#readme",
+  "homepage": "https://github.com/Filip-Stastny-Philips/mcp-grafana-debug#readme",
   "keywords": [
     "mcp",
     "grafana",
