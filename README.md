@@ -1,12 +1,23 @@
-# @leval/mcp-grafana
+# @filip.happy/mcp-grafana
+
+> **Fork of [`@filip.happy/mcp-grafana`](https://www.npmjs.com/package/@filip.happy/mcp-grafana)** — see [What's different in this fork](#whats-different-in-this-fork) below.
 
 Complete TypeScript/JavaScript implementation of the Model Context Protocol (MCP) server for Grafana, enabling AI assistants to interact with Grafana dashboards, datasources, alerts, incidents, and more.
 
-[![npm version](https://img.shields.io/npm/v/@leval/mcp-grafana.svg)](https://www.npmjs.com/package/@leval/mcp-grafana)
-[![npm downloads](https://img.shields.io/npm/dm/@leval/mcp-grafana.svg)](https://www.npmjs.com/package/@leval/mcp-grafana)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![npm version](https://img.shields.io/npm/v/@filip.happy/mcp-grafana.svg)](https://www.npmjs.com/package/@filip.happy/mcp-grafana)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-1.0-green.svg)](https://modelcontextprotocol.io)
-[![GitHub stars](https://img.shields.io/github/stars/levalhq/mcp-grafana.svg)](https://github.com/levalhq/mcp-grafana/stargazers)
+[![GitHub](https://img.shields.io/badge/GitHub-Filip--Stastny--Philips%2Fmcp--grafana--debug-lightgrey.svg)](https://github.com/Filip-Stastny-Philips/mcp-grafana-debug)
+
+## What's different in this fork
+
+This fork adds one targeted fix on top of `@filip.happy/mcp-grafana@1.1.7`:
+
+**Null-argument stripping before Zod validation** (`src/server/mcp-server.ts`)
+
+LLMs commonly encode optional-but-omitted fields as JSON `null` instead of simply leaving them out. The upstream Zod schemas use `.optional()`, which accepts `undefined` but rejects `null`, causing `McpError: Invalid arguments` (HTTP 500) for tools like `query_prometheus`, `list_incidents`, `generate_deeplink`, and others.
+
+The fix recursively strips `null`-valued keys from tool arguments before schema validation. Falsy-but-non-null values (`0`, `""`, `false`, `[]`) are preserved unchanged.
 
 ## 🚀 Features
 
@@ -21,17 +32,17 @@ Complete TypeScript/JavaScript implementation of the Model Context Protocol (MCP
 
 ### Option 1: Global Installation
 ```bash
-npm install -g @leval/mcp-grafana
+npm install -g @filip.happy/mcp-grafana
 ```
 
 ### Option 2: Run with npx (no installation)
 ```bash
-npx @leval/mcp-grafana
+npx @filip.happy/mcp-grafana
 ```
 
 ### Option 3: Local Development
 ```bash
-git clone https://github.com/levalhq/mcp-grafana.git
+git clone https://github.com/Filip-Stastny-Philips/mcp-grafana-debug.git
 cd mcp-grafana
 npm install
 npm run build
@@ -76,7 +87,7 @@ TLS_SKIP_VERIFY=true                            # Skip TLS verification
   "mcpServers": {
     "grafana": {
       "command": "npx",
-      "args": ["@leval/mcp-grafana"],
+      "args": ["@filip.happy/mcp-grafana"],
       "env": {
         "GRAFANA_URL": "https://your-grafana.com",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -102,7 +113,7 @@ TLS_SKIP_VERIFY=true                            # Skip TLS verification
   "claude.mcpServers": {
     "grafana": {
       "command": "npx",
-      "args": ["@leval/mcp-grafana"],
+      "args": ["@filip.happy/mcp-grafana"],
       "env": {
         "GRAFANA_URL": "https://your-grafana.com",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -133,7 +144,7 @@ Or configure globally in VS Code settings:
   "ai.mcpServers": {
     "grafana": {
       "command": "npx",
-      "args": ["@leval/mcp-grafana"],
+      "args": ["@filip.happy/mcp-grafana"],
       "env": {
         "GRAFANA_URL": "https://your-grafana.com",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -166,7 +177,7 @@ Or configure globally:
     "mcp_servers": {
       "grafana": {
         "command": "npx",
-        "args": ["@leval/mcp-grafana"],
+        "args": ["@filip.happy/mcp-grafana"],
         "env": {
           "GRAFANA_URL": "https://your-grafana.com",
           "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -193,7 +204,7 @@ Or configure globally:
   "servers": {
     "grafana": {
       "command": "npx",
-      "args": ["@leval/mcp-grafana"],
+      "args": ["@filip.happy/mcp-grafana"],
       "env": {
         "GRAFANA_URL": "https://your-grafana.com",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -220,7 +231,7 @@ Or configure globally:
   "mcpServers": {
     "grafana": {
       "command": "npx",
-      "args": ["@leval/mcp-grafana"],
+      "args": ["@filip.happy/mcp-grafana"],
       "env": {
         "GRAFANA_URL": "https://your-grafana.com",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -245,7 +256,7 @@ Or configure globally:
 {
   "grafana": {
     "command": "npx",
-    "args": ["@leval/mcp-grafana"],
+    "args": ["@filip.happy/mcp-grafana"],
     "env": {
       "GRAFANA_URL": "https://your-grafana.com",
       "GRAFANA_SERVICE_ACCOUNT_TOKEN": "glsa_xxxxxxxxxxxx"
@@ -347,13 +358,13 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
   https://your-grafana.com/api/org
 
 # Test with the MCP server
-npx @leval/mcp-grafana --debug
+npx @filip.happy/mcp-grafana --debug
 ```
 
 ### Run Test Suite
 ```bash
 # Clone the repository
-git clone https://github.com/levalhq/mcp-grafana.git
+git clone https://github.com/Filip-Stastny-Philips/mcp-grafana-debug.git
 cd mcp-grafana
 
 # Install dependencies
@@ -380,7 +391,7 @@ node test/test-api.js
 ### MCP Server Not Starting
 ```bash
 # Check if running correctly
-npx @leval/mcp-grafana --debug
+npx @filip.happy/mcp-grafana --debug
 
 # Should output:
 # Starting MCP Grafana server with stdio transport...
@@ -417,7 +428,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 ### Disable Specific Tool Categories
 ```bash
-npx @leval/mcp-grafana \
+npx @filip.happy/mcp-grafana \
   --disable-incident \
   --disable-oncall \
   --disable-sift
@@ -428,15 +439,15 @@ npx @leval/mcp-grafana \
 export TLS_CERT_FILE=/path/to/cert.pem
 export TLS_KEY_FILE=/path/to/key.pem
 export TLS_CA_FILE=/path/to/ca.pem
-npx @leval/mcp-grafana
+npx @filip.happy/mcp-grafana
 ```
 
 ### Debug Mode
 ```bash
-npx @leval/mcp-grafana --debug
+npx @filip.happy/mcp-grafana --debug
 # Or
 export DEBUG=true
-npx @leval/mcp-grafana
+npx @filip.happy/mcp-grafana
 ```
 
 ## 🤝 Contributing
@@ -445,7 +456,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ```bash
 # Fork and clone
-git clone https://github.com/levalhq/mcp-grafana.git
+git clone https://github.com/Filip-Stastny-Philips/mcp-grafana-debug.git
 cd mcp-grafana
 
 # Install dependencies
@@ -478,33 +489,29 @@ All features from the original Go implementation have been migrated:
 
 ## 📄 License
 
-Apache-2.0 - See [LICENSE](LICENSE) file for details
+MIT — see [LICENSE](LICENSE) file for details.
+
+Original work copyright (c) 2026 Vasanth (`@leval/mcp-grafana`). Fork modifications copyright (c) 2026 Filip Stastny.
 
 ## 📦 NPM Package
 
-This package is published on npm as [`@leval/mcp-grafana`](https://www.npmjs.com/package/@leval/mcp-grafana)
+This package is published on npm as [`@filip.happy/mcp-grafana`](https://www.npmjs.com/package/@filip.happy/mcp-grafana)
 
 ```bash
 # Install globally
-npm install -g @leval/mcp-grafana
+npm install -g @filip.happy/mcp-grafana
 
 # Or use directly with npx
-npx @leval/mcp-grafana
+npx @filip.happy/mcp-grafana
 
 # View package info
-npm info @leval/mcp-grafana
+npm info @filip.happy/mcp-grafana
 ```
 
 ## 🆘 Support
 
-- **NPM Package**: [npmjs.com/package/@leval/mcp-grafana](https://www.npmjs.com/package/@leval/mcp-grafana)
-- **GitHub Issues**: [github.com/levalhq/mcp-grafana/issues](https://github.com/levalhq/mcp-grafana/issues)
+- **NPM Package**: [npmjs.com/package/@filip.happy/mcp-grafana](https://www.npmjs.com/package/@filip.happy/mcp-grafana)
+- **GitHub (this fork)**: [github.com/Filip-Stastny-Philips/mcp-grafana-debug](https://github.com/Filip-Stastny-Philips/mcp-grafana-debug)
+- **Upstream repo**: [github.com/levalhq/mcp-grafana](https://github.com/levalhq/mcp-grafana)
 - **Documentation**: [Grafana Docs](https://grafana.com/docs)
 - **MCP Protocol**: [modelcontextprotocol.io](https://modelcontextprotocol.io)
-
-## 🎉 Acknowledgments
-
-This TypeScript implementation provides full feature parity with the original Go version, with improved npm ecosystem integration and support for all major MCP clients.
-
-
-**Made with ❤️ for the Grafana and AI community**
